@@ -4,6 +4,7 @@ BMS MQTT 设备模拟器 - 主程序入口
 """
 import json
 import logging
+import time
 from typing import List, Dict
 
 from config import get_mqtt_config, ConfigError
@@ -93,21 +94,28 @@ def main():
 
     print("\n所有设备模拟器已启动，按 Ctrl+C 停止\n")
 
-    try:
-        for t in threads:
-            t.join()
-    except KeyboardInterrupt:
+    import signal
+    import sys
+
+    def signal_handler(sig, frame):
         logger.info("收到中断信号，正在停止...")
         if observer:
             observer.stop()
-            observer.join()
         for sim in simulators:
             sim.disconnect()
         for t in threads:
-            t.join(timeout=5)
+            t.join(timeout=2)
             if t.is_alive():
-                logger.warning(f"线程 {t.name} 未在 5 秒内退出")
+                logger.warning(f"线程 {t.name} 未在 2 秒内退出")
         logger.info("模拟器已停止")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    # 主循环 - 等待所有设备线程
+    while True:
+        time.sleep(0.5)
 
 
 if __name__ == "__main__":

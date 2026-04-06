@@ -313,7 +313,8 @@ class DeviceSimulator:
                 self.connect()
                 time.sleep(5)
 
-            time.sleep(1)
+            # 使用短睡眠 + 事件等待，加快退出响应
+            self._stop_event.wait(timeout=0.1)
 
         logger.info(f"[{self.devId}] 模拟线程结束")
 
