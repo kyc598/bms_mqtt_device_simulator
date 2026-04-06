@@ -127,10 +127,15 @@ class DeviceSimulator:
         if rc_value == 0:
             logger.info(f"[{self.devId}] MQTT 连接成功")
             self.connected = True
-            down_topic = f"ess/bms/{self.devId}/down"
-            logger.info(f"[{self.devId}] 正在订阅：{down_topic}")
-            self._mqtt.subscribe(down_topic, qos=1)
-            logger.info(f"[{self.devId}] 已订阅下行主题：{down_topic}")
+            # 短暂延迟后再订阅，避免服务器立即断开
+            time.sleep(0.1)
+            if self._mqtt and self._mqtt.connected:
+                down_topic = f"ess/bms/{self.devId}/down"
+                logger.info(f"[{self.devId}] 正在订阅：{down_topic}")
+                self._mqtt.subscribe(down_topic, qos=1)
+                logger.info(f"[{self.devId}] 已订阅下行主题：{down_topic}")
+            else:
+                logger.warning(f"[{self.devId}] 订阅前检查发现已断开，跳过订阅")
         else:
             logger.error(f"[{self.devId}] MQTT 连接失败，返回码：{rc_value}")
             self.connected = False
