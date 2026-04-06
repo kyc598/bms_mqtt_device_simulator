@@ -1,0 +1,18 @@
+[
+  {
+      "devId": "ESS12345678901202",
+      "number_of_cells": 18,
+      "number_of_temperature_sensors": 6,
+      "rated_voltage": 48.0,
+      "rated_capacity": 100,
+      "battery_type": "LI"
+  },
+  {
+    "devId": "ESS12345678901201",
+    "number_of_cells": 16,
+    "number_of_temperature_sensors": 8,
+    "rated_voltage": 48.0,
+    "rated_capacity": 100,
+    "battery_type": "LI"
+  }
+]
