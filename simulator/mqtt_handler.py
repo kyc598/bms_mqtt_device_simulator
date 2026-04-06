@@ -53,10 +53,8 @@ class MQTTHandler:
         self._cleanup()
 
         try:
-            # 添加随机后缀以避免客户端 ID 冲突
-            # EMQX 会在客户端 ID 相同时断开旧连接
-            import uuid
-            client_id = f"{self.dev_id}_{uuid.uuid4().hex[:8]}"
+            # 使用固定客户端 ID，这样新连接会自动踢掉旧连接（EMQX 默认行为）
+            client_id = self.dev_id
             logger.info(f"[{self.dev_id}] 使用客户端 ID: {client_id}")
 
             self._client = mqtt.Client(
