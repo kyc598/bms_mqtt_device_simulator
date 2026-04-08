@@ -184,6 +184,10 @@ class DeviceSimulator:
 
     def connect(self) -> bool:
         """连接 MQTT Broker"""
+        # 避免重复连接
+        if self._mqtt is not None:
+            logger.debug(f"[{self.devId}] 已存在 MQTT 客户端，跳过连接")
+            return True
         self.setup_mqtt()
         return self._mqtt.connect()
 
