@@ -40,6 +40,13 @@ def main():
     print("户用储能 BMS 模拟器 (四遥接口规范 v1.2)")
     print("=" * 60)
 
+    # 生成实例 ID 用于追踪
+    import uuid
+    import os
+    instance_id = uuid.uuid4().hex[:8]
+    hostname = os.getenv("HOSTNAME", "local")
+    logger.info(f"实例启动：hostname={hostname}, instance_id={instance_id}")
+
     # 配置管理器
     config_manager = ConfigManager("devices.json")
     simulators = []
